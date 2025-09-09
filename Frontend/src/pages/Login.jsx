@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import "./Login.css";
 import axios from "axios"
+import {useNavigate} from "react-router-dom"
 
 const Login = () => {
 	const [username, setusername] = useState("");
 	const [password, setPassword] = useState("");
+	const navigate = useNavigate()
+
+	
+	
   
   
 	const handleSubmit = async (e) => {
@@ -66,7 +71,7 @@ const Login = () => {
           </div>
 
 					<div className="lp-socials">
-						<button type="button" className="lp-social lp-google">Register Here</button>
+						<button type="button" className="lp-social lp-google" onClick={()=>{navigate("/Register")}}>Register Here</button>
 					</div>
 				</form>
 			</div>

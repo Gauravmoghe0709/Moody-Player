@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.post("/register",async(req,res)=>{
 
-    const {username,password} = req.body
+    const {name,username,password} = req.body
 
     const userexist = await authmodel.findOne({username })
     if(userexist){
@@ -21,6 +21,7 @@ router.post("/register",async(req,res)=>{
     }
 
     const user = await authmodel.create({
+        name,
         username,
         password:await bcrypt.hash(password, 10)
     })
