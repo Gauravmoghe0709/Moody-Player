@@ -1,0 +1,136 @@
+.lp-container {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+	padding: 32px;
+}
+
+.lp-card {
+	width: 100%;
+	max-width: 960px;
+	background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+	border-radius: 14px;
+	box-shadow: 0 8px 40px rgba(2,6,23,0.6);
+	display: grid;
+	grid-template-columns: 1fr 420px;
+	overflow: hidden;
+}
+
+.lp-brand {
+	padding: 48px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, rgba(37,117,252,0.08), rgba(106,17,203,0.06));
+}
+
+.lp-logo {
+	font-size: 56px;
+	margin-bottom: 12px;
+}
+
+.lp-appname {
+	color: #fff;
+	font-size: 22px;
+	margin: 0;
+}
+
+.lp-form {
+	padding: 36px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.lp-title {
+	margin: 0;
+	color: #e6eef8;
+	font-size: 20px;
+}
+
+.lp-sub {
+	margin: 0;
+	color: #9fb3d6;
+	font-size: 13px;
+}
+
+.lp-error {
+	background: #3b0a0a;
+	color: #ffd6d6;
+	padding: 8px 12px;
+	border-radius: 8px;
+}
+
+.lp-label {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	color: #cfe2ff;
+	font-size: 13px;
+}
+
+.lp-label input {
+	padding: 10px 12px;
+	border-radius: 8px;
+	border: 1px solid rgba(255,255,255,0.08);
+	background: rgba(255,255,255,0.02);
+	color: #eaf4ff;
+}
+
+.lp-label input::placeholder { color: rgba(235,245,255,0.4); }
+
+.lp-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 13px;
+	color: #bcd6ff;
+}
+
+.lp-remember input { margin-right: 8px; }
+
+.lp-forgot { color: #9fb3d6; text-decoration: none; }
+
+.lp-btn {
+	margin-top: 6px;
+	background: linear-gradient(90deg, #2575fc, #6a11cb);
+	color: #fff;
+	padding: 10px 12px;
+	border: none;
+	border-radius: 10px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.lp-divider {
+	text-align: center;
+	color: #9fb3d6;
+	margin-top: 8px;
+}
+span{
+    font-size: small;
+
+}
+
+.lp-socials { display: flex; gap: 8px; flex-direction: column; }
+.lp-social { padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04); background: transparent; color: #eaf4ff; cursor: pointer; }
+.lp-google { background: rgba(255,255,255,0.02); }
+.lp-apple { background: rgba(255,255,255,0.01); }
+
+@media (max-width: 880px) {
+	.lp-card { grid-template-columns: 1fr; max-width: 520px; }
+	.lp-brand { padding: 28px; }
+	.lp-form { padding: 24px; }
+}
+
+@media (max-width: 420px) {
+	.lp-card { border-radius: 10px; }
+	.lp-logo { font-size: 44px; }
+	.lp-form { padding: 18px; }
+	.lp-actions { flex-direction: column; gap: 8px; align-items: flex-start; }
+	.lp-socials { flex-direction: column; }
+}
+

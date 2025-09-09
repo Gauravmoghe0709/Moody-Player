@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
-import FaceExpressionDetector from './component/FaceExpressionDetector'
-import Songs from './component/Songs'
+import Login from './pages/Login'
+
+
 
 
 function App() {
@@ -11,8 +12,9 @@ function App() {
   }])
   return (
     <>
-      <FaceExpressionDetector setsonglist={setsonglist}></FaceExpressionDetector>
-      <Songs songlist={songlist}></Songs>
+
+    <Login></Login>  
+      
   
     </>
   )
