@@ -1,0 +1,8 @@
+
+@import "tailwindcss/utilities";
+
+/* body default - dark theme will be applied by toggling html.dark class */
+body {
+	background-color: #0f172a; /* slate-900 fallback */
+	color: #e6eef8; /* slate-100 fallback */
+}

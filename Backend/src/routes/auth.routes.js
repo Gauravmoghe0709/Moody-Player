@@ -2,6 +2,7 @@ const express = require("express")
 const authmodel = require("../model/auth.modle")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const Loginauth = require("../middleware/Loginauth.middleware")
 
 
 const router = express.Router()
@@ -9,60 +10,74 @@ const router = express.Router()
 
 
 
-router.post("/register",async(req,res)=>{
+router.post("/register", async (req, res) => {
 
-    const {name,username,password} = req.body
+    const { name, username, password } = req.body
 
-    const userexist = await authmodel.findOne({username })
-    if(userexist){
+    const userexist = await authmodel.findOne({ username })
+    if (userexist) {
         return res.status(400).json({
-            message:"user already exist"
+            message: "user already exist"
         })
     }
 
     const user = await authmodel.create({
         name,
         username,
-        password:await bcrypt.hash(password, 10)
+        password: await bcrypt.hash(password, 10)
     })
 
-    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
     res.cookie("token", token)
 
     res.status(201).json({
-        message:"New user create sucessfully..."
+        message: "New user create sucessfully..."
     })
 })
 
-router.post("/login",async(req,res)=>{
-    const {username,password} = req.body
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body
 
     const userexist = await authmodel.findOne({
         username
     })
-    if(!userexist){
+    if (!userexist) {
         return res.status(401).json({
-            message:"invalid username"
+            message: "invalid username"
         })
     }
 
-    const userpassword = await bcrypt.compare(password, userexist.password) 
+    const userpassword = await bcrypt.compare(password, userexist.password)
 
-    if(!userpassword){
+    if (!userpassword) {
         return res.status(401).json({
-            message:"password does not match..."
+            message: "password does not match..."
         })
     }
 
-    const token = jwt.sign({id: userexist._id},process.env.JWT_SECRET)
-    res.cookie("token",token)
+    const token = jwt.sign({ id: userexist._id }, process.env.JWT_SECRET)
+    res.cookie("token", token)
 
     res.status(201).json({
-        message:"login sucessfully...",
-        user:{
+        message: "login sucessfully...",
+        user: {
             username: userexist.username,
             token
         }
+    })
+
+})
+
+router.get("/profile", Loginauth, (req, res) => {
+    res.status(201).json({
+        user: req.user
+    })
+})
+
+router.post("/logout", async (req, res) => {
+    res.clearCookie("token")
+    res.json({
+        message: "User Logout..."
     })
 
 })

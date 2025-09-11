@@ -1,32 +1,29 @@
-import  { useState } from "react";
+import { useState } from "react";
 import "./Login.css";
 import axios from "axios"
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
-const Login = () => {
+const Login = ({setAuth}) => {
 	const [username, setusername] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate()
 
-	
-	
-  
-  
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		
+		try {
+			await axios.post("http://localhost:3000/user/login",{
+				username,password},{withCredentials:true})
+			setAuth(true)
+			navigate("/")
+		} catch (err) {
+			alert(err.response?.data?.message || "Login failed");
+		}
 
-    await axios.post("http://localhost:3000/user/login",{
-      username,
-      password
-    }).then((res)=>{
-      alert(res.data.message)
-    })
+	
 
 	};
 
-  
-  
+
 
 	return (
 		<div className="lp-container">
@@ -49,7 +46,7 @@ const Login = () => {
 							value={username}
 							onChange={(e) => setusername(e.target.value)}
 							placeholder="you@example.com"
-      
+
 						/>
 					</label>
 
@@ -64,14 +61,14 @@ const Login = () => {
 						/>
 					</label>
 
-					<button className="lp-btn" type="submit" >Sign in</button>
+					<button className="lp-btn" type="submit" >Log in</button>
 
 					<div className="lp-divider">
-            <span>You Don`t Have Account</span>
-          </div>
+						<span>You Don`t Have Account?</span>
+					</div>
 
 					<div className="lp-socials">
-						<button type="button" className="lp-social lp-google" onClick={()=>{navigate("/Register")}}>Register Here</button>
+						<button type="button" className="lp-social lp-google" onClick={() => { navigate("/Register") }}>Register Here</button>
 					</div>
 				</form>
 			</div>

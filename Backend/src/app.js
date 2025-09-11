@@ -8,7 +8,10 @@ const cookieparser = require("cookie-parser")
 const app = express()
 app.use(express.json())
 app.use(cookieparser())
-app.use(cors()) // cors is a middleware use for communicate and create a connection between frontend and backend
+app.use(cors({
+    credentials:true,
+    origin:"http://localhost:5173"
+})) // cors is a middleware use for communicate and create a connection between frontend and backend
 app.use("/",songsroutes)
 app.use("/user",authroutes)
 
