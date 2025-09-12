@@ -1,10 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as faceapi from "face-api.js";
 import axios from "axios";
+import {useNavigate} from "react-router-dom"
 
-export default function FaceExpressionDetector({ setsonglist, onLogout }) {
-  const videoRef = useRef();
+export default function FaceExpressionDetector({ setsonglist,setAuth }) {
+  const videoRef = useRef(); 
   const [expression, setExpression] = useState("");
+  
+   
+  const navigate = useNavigate()
 
   const loadModels = async () => {
     const MODEL_URL = "/models";
@@ -47,13 +51,23 @@ export default function FaceExpressionDetector({ setsonglist, onLogout }) {
     loadModels().then(startVideo);
   }, []);
 
+  async function handlelogout() {
+     try {
+        const res = await axios.post("http://localhost:3000/user/logout",{},{withCredentials:true})
+        console.log(res.data)
+        setAuth(false)
+        navigate("/login")
+     } catch (error) {
+      console.log(error)
+     }
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
-      {/* Top bar with Logout */}
       <div className="w-full flex justify-between items-center p-4 bg-gray-800 shadow-md">
         <h1 className="text-xl font-bold text-blue-400">Mood Player</h1>
         <button
-          onClick={onLogout}
+          onClick={handlelogout}
           className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg shadow-md transition"
         >
           Logout

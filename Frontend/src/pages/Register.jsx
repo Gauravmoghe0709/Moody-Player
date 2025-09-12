@@ -11,14 +11,14 @@ const Register = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log("Register", { name, username });
+		console.log("Register", { fullname, username });
         axios.post("http://localhost:3000/user/register",{
-            name,username,password
+            fullname,username,password
         }).then((res)=>{
             console.log(res)
         })
         
-        navigate("/")
+        navigate("/login")
 
 
        

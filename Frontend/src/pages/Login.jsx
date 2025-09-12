@@ -19,10 +19,7 @@ const Login = ({setAuth}) => {
 			alert(err.response?.data?.message || "Login failed");
 		}
 
-	
-
 	};
-
 
 
 	return (
@@ -68,7 +65,7 @@ const Login = ({setAuth}) => {
 					</div>
 
 					<div className="lp-socials">
-						<button type="button" className="lp-social lp-google" onClick={() => { navigate("/Register") }}>Register Here</button>
+						<button type="button" className="lp-social lp-google" onClick={() => { navigate("/Register")}}>Register Here</button>
 					</div>
 				</form>
 			</div>

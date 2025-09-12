@@ -4,13 +4,13 @@ import Songs from "../pages/Songs"
 import "../pages/FaceExpression.css"
 
 
-const Home = () => {
+const Home = ({setAuth}) => {
     const [songlist, setsonglist] = useState([{
 
     }])
     return (
         <>
-            <FaceExpressionDetector setsonglist={setsonglist}></FaceExpressionDetector>
+            <FaceExpressionDetector setsonglist={setsonglist} setAuth={setAuth}></FaceExpressionDetector>
             <Songs songlist={songlist}></Songs>
             
 
