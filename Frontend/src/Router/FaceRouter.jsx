@@ -5,6 +5,7 @@
     import Home from "../pages/Home";
     import Register from "../pages/Register"
     import { Navigate } from "react-router-dom";
+    import Navbar from "../component/Navbar";
 
 
     const FaceRouter = () => {

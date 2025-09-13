@@ -1,11 +1,14 @@
-import { NavLink } from "react-router-dom"
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
-    <NavLink to="/login">Login</NavLink>
+      
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar; 
