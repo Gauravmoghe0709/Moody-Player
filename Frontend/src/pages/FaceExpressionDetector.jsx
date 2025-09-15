@@ -1,15 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as faceapi from "face-api.js";
 import axios from "axios";
-import {useNavigate} from "react-router-dom"
 
-export default function FaceExpressionDetector({ setsonglist,setAuth }) {
+
+export default function FaceExpressionDetector({ setsonglist }) {
   const videoRef = useRef(); 
   const [expression, setExpression] = useState("");
-  
-   
-  const navigate = useNavigate()
-
   const loadModels = async () => {
     const MODEL_URL = "/models";
     await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
@@ -52,7 +48,7 @@ export default function FaceExpressionDetector({ setsonglist,setAuth }) {
   }, []);
 
   return (
-     <div className="flex flex-col md:flex-row flex-1 items-center justify-center p-6 gap-6">
+     <div className="flex flex-col md:flex-row flex-1 items-center justify-center p-6 gap-6 md:mx-[15rem]">
           <video
             ref={videoRef}
             autoPlay

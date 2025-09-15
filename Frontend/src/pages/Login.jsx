@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = ({setAuth}) => {
   const [username, setUsername] = useState("");
@@ -16,6 +17,7 @@ const Login = ({setAuth}) => {
 		},{withCredentials:true})
 		setAuth(true)
 		navigate("/")
+    toast.success(` Welcome ${username.slice(0,5)}`)
 	} catch (error) {
 		console.log(error)		
 	}
