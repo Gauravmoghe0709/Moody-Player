@@ -11,7 +11,7 @@ import  Search  from "../pages/Search";
 const FaceRouter = () => {
     const [Auth, setAuth] = useState(false)
     useEffect(() => {
-        axios.get("http://localhost:3000/user/profile", { withCredentials: true })
+        axios.get("http://localhost:3000/user/profile",{ withCredentials: true })
             .then(() => { setAuth(true) })
             .catch(() => { setAuth(false) })
     }, [])

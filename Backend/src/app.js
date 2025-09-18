@@ -1,6 +1,7 @@
 const express = require ("express")
 const songsroutes = require ("./routes/songs.routes")
 const authroutes = require("./routes/auth.routes")
+const playlistroute = require ("./routes/playlist.routes")
 const cors = require ("cors")
 const cookieparser = require("cookie-parser")
 
@@ -14,6 +15,7 @@ app.use(cors({
 })) // cors is a middleware use for communicate and create a connection between frontend and backend
 app.use("/",songsroutes)
 app.use("/user",authroutes)
+app.use("/user",playlistroute)
 
 
 

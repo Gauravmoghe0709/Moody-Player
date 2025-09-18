@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
     res.cookie("token", token)
 
     res.status(201).json({
-        message: "New user create sucessfully..."
+        message: "New user create sucessfully and playlist created.."
     })
 })
 
@@ -61,8 +61,8 @@ router.post("/login", async (req, res) => {
     res.status(201).json({
         message: "login sucessfully...",
         user: {
-            username: userexist.username,
-            token
+            id: userexist._id,
+            token,
         }
     })
 

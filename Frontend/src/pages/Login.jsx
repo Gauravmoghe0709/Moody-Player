@@ -12,10 +12,11 @@ const Login = ({setAuth}) => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-		await axios.post("http://localhost:3000/user/login",{
+		const res = await axios.post("http://localhost:3000/user/login",{
 			username,password
 		},{withCredentials:true})
 		setAuth(true)
+    console.log(res)
 		navigate("/")
     toast.success(` Welcome ${username.slice(0,5)}`)
 	} catch (error) {
