@@ -27,7 +27,7 @@ const FaceRouter = () => {
                     element={Auth ? <Home setAuth={setAuth} ></Home> : <Navigate to="/login"></Navigate>}
                 ></Route>
                 <Route path="/Register" element={<Register></Register>}></Route>
-                <Route path="/Search" element={<Search></Search>}></Route>
+                <Route path="/Search" element={<Search setAuth={setAuth}></Search>}></Route>
 
             </Routes>
         </>

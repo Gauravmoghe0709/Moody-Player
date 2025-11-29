@@ -7,7 +7,6 @@ const songsschema = new mongoose.Schema({
     Audio:String,
     mood:String
 
-
 })
 
 const songs = mongoose.model("song",songsschema)

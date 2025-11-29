@@ -1,74 +1,171 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef, } from 'react';
+import axios from 'axios';
+import Sidebar from './Sidebar';
+import { useNavigate } from 'react-router-dom';
 
-const sampleSongs = [
-  { id: 1, title: 'Midnight Drive', artist: 'Synthwave Crew', duration: '3:42' },
-  { id: 2, title: 'Ocean Eyes', artist: 'Calm Beats', duration: '4:01' },
-  { id: 3, title: 'City Lights', artist: 'Nightwalkers', duration: '2:58' },
-  { id: 4, title: 'Sunset Lover', artist: 'Indie Ocean', duration: '3:20' },
-  { id: 5, title: 'Eternal', artist: 'Ambientia', duration: '5:05' },
-];
+
 
 const Search = () => {
-  const [query, setQuery] = useState('');
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return sampleSongs;
-    return sampleSongs.filter(s => s.title.toLowerCase().includes(q) || s.artist.toLowerCase().includes(q));
-  }, [query]);
+  
+  const [query, setQuery] = useState('');
+  const [playlists, setPlaylists] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [playlistid, setplaylistid] = useState()
+  const [showAddSongForm, setShowAddSongForm] = useState(false);
+  const [formTitle, setFormTitle] = useState("");
+  const [formArtist, setFormArtist] = useState("");
+  const [formFile, setFormFile] = useState(null);
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+  };
+
+  const createPlaylist = async () => {
+    const playlistname = prompt('enter playlist name');
+
+    if (playlistname.length == 0) {
+      alert("invalid....")
+    } else {
+      try {
+        const res = await axios.post(`http://localhost:3000/user/create-playlist`, { playlistname }, { withCredentials: true });
+        console.log(res.data);
+        const id  = res.data.newplaylist._id
+        setplaylistid(id)
+
+      }
+      catch (error) {
+        console.log(error);
+        alert('Failed to create playlist — check console');
+      }
+
+    }
+
+  };
+
+
+  const handlesongdata =(e)=>{
+      e.preventDefault()
+      console.log({ title: formTitle, artist: formArtist, file: formFile })
+  }
+
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <div className="max-w-5xl mx-50">
-        <div className="sticky top-4 z-20 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex-1">
-              <label className="relative block">
-                <span className="sr-only">Search songs</span>
-                <input
-                  className="placeholder:italic placeholder:text-slate-400 block w-full border border-slate-200 rounded-md py-3 pl-4 pr-10 shadow-sm focus:outline-none focus:border-blue-300 text-gray-500"
-                  placeholder="Search by title or artist..."
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-                <svg className="w-5 h-5 text-slate-400 absolute right-3 top-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35M16.65 16.65A7 7 0 1110 3a7 7 0 016.65 13.65z" />
-                </svg>
-              </label>
+
+    <div className="min-h-screen bg-slate-900 text-slate-100 md:ml-60 ">
+      <Sidebar></Sidebar>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pl-0">
+        <section id="search" className="mb-6">
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="relative max-w-4xl mx-auto">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search songs, artists, playlists..."
+                className="w-full rounded-full border border-slate-700 bg-slate-800 px-4 py-3 pr-28 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+
+              <button
+                type="submit"
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full ml-2"
+              >
+                Search
+              </button>
             </div>
+          </form>
+        </section>
+
+        <div className="max-w-4xl mx-auto mt-4 flex justify-center md:justify-end items-center ">
+          <div className="relative ml-[80%]">
             <button
-              onClick={() => setQuery('')}
-              className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              onClick={() => setMenuOpen((s) => !s)}
+              className="p-2 rounded-2xl bg-slate-700 hover:bg-slate-700"
+              aria-expanded={menuOpen}
+              aria-label="Open menu"
             >
-              Clear
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-200" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-md shadow-lg ring-1 ring-black/20 z-50">
+                <button onClick={() => { setMenuOpen(false); createPlaylist(); }} className="w-full text-left px-4 py-2 hover:bg-slate-700">Create Playlist</button>
+                <button onClick={() => { setMenuOpen(false); setShowAddSongForm(true); }} className="w-full text-left px-4 py-2 hover:bg-slate-700">Add Song</button>
+              </div>
+            )}
           </div>
         </div>
+ 
+        {showAddSongForm && (
+          <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 mt-10">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setShowAddSongForm(false)} />
+            <div className="relative w-full max-w-md bg-slate-800 rounded-lg shadow-lg p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">Add Song</h3>
+                <button onClick={() => setShowAddSongForm(false)} className="text-slate-300 hover:text-white">✕</button>
+              </div>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-          {results.map(song => (
-            <div key={song.id} className="bg-white rounded-xl shadow p-4 flex flex-col">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center text-white font-bold">SM</div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{song.title}</h3>
-                  <p className="text-sm text-gray-500">{song.artist}</p>
+              <form onSubmit={handlesongdata} className="space-y-3">  
+
+                <div>
+                  <label className="block text-sm text-slate-200 mb-1">Song Name</label>
+                  <input value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="Enter song title" className="w-full rounded-md bg-slate-700 border border-slate-600 px-3 py-2 text-slate-100" />
                 </div>
-                <div className="text-sm text-gray-400">{song.duration}</div>
-              </div>
 
-              <div className="mt-4 flex items-center gap-3">
-                <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">Play</button>
-                <button className="px-3 py-1 border border-slate-200 rounded-md text-sm">Add</button>
-                <button className="ml-auto text-sm text-gray-500">More</button>
-              </div>
+                <div>
+                  <label className="block text-sm text-slate-200 mb-1">Artist</label>
+                  <input value={formArtist} onChange={(e) => setFormArtist(e.target.value)} placeholder="Artist name" className="w-full rounded-md bg-slate-700 border border-slate-600 px-3 py-2 text-slate-100" />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-slate-200 mb-1">Upload Song</label>
+                  <input type="file" accept="audio/*" onChange={(e) => setFormFile(e.target.files?.[0] ?? null)} className="w-full text-sm text-gray-400 border-2 rounded-md p-2 px-10 mt-2" />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-end">
+                  <button type="button" onClick={() => setShowAddSongForm(false)} className="w-full sm:w-auto px-4 py-2 rounded-md bg-slate-700 text-slate-200">Cancel</button>
+                  <button type="submit" className="w-full sm:w-auto px-4 py-2 rounded-md bg-indigo-600 text-white">Add Song</button>
+                </div>
+              </form>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        )}
+
+        <section className="max-w-7xl mx-auto mt-8">
+          {playlists.length === 0 ? (
+            <h1 className='text-center pt-5 tracking-widest text-gray-500'>You have no playlist here ...</h1>
+          ) : (
+            <>
+              <h3 className="text-xl font-semibold mb-4 text-white">Your Playlists</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {playlists.map((pl) => (
+                  <div key={pl._id || pl.playlistname} className="bg-slate-800 rounded-lg overflow-hidden shadow-md">
+                    <div className="relative h-36">
+                      <img src={`https://picsum.photos/seed/playlist-${pl._id || pl.playlistname}/600/400`} alt={pl.playlistname} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    </div>
+                    <div className="p-3">
+                      <h4 className="text-white font-semibold truncate">{pl.playlistname}</h4>
+                      <p className="text-sm text-slate-300">{(pl.songs && pl.songs.length) || 0} songs</p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded">Open</button>
+                        <button className="text-rose-400 hover:text-rose-500">❤</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+
+      </main>
     </div>
   );
-}; 
+};
 
 export default Search;

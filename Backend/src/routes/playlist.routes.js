@@ -1,7 +1,8 @@
-const playlistmodel = require("../model/userplaylist.model")
+const playlistmodel = require ("../model/userplaylist.model")
 const express = require("express")
 const multer = require("multer")
 const uploadfile = require("../service/Storage.service")
+const authmiddleware = require ("../middleware/Loginauth.middleware")
 
 
 
@@ -10,8 +11,8 @@ const router = express.Router()
 const upload = multer({ storage: multer.memoryStorage() })
 
 // create a new playlist 
-router.post("/:userid", async (req, res) => {
-    const { userid } = req.params
+router.post("/create-playlist",authmiddleware, async (req, res) => {
+    const userid = req.user.id
     const { playlistname } = req.body
 
 
@@ -24,20 +25,24 @@ router.post("/:userid", async (req, res) => {
     res.status(201).json({
         message: "playlist created...",
         newplaylist,
+        
     })
 
 })
 
 // add a songs to playlist
-router.post("/:userid/uploadsong/:playlistid", upload.single("usersong"), async (req, res) => {
+router.post("/uploadsongs/:playlistid",authmiddleware, upload.single("song"), async (req, res) => {
     const filedata = await uploadfile(req.file)
     console.log(filedata)
-    const { userid, playlistid } = req.params
+
+    const { playlistid } = req.params
     const { title, artist } = req.body
+
+    const userid = req.user.id
 
     const newplaylist = await playlistmodel.findOne({
         _id: playlistid,
-        userid,
+        userid:userid,
     })
 
     if (!newplaylist) {
@@ -81,7 +86,6 @@ router.get("/:playlistid/songs", async (req, res) => {
 
 })
 
-
 // GET songs by search (artist or title)
 router.get("/songs/search", async (req, res) => {
   try {
@@ -103,6 +107,7 @@ router.get("/songs/search", async (req, res) => {
     res.status(500).json({ message: "Error searching songs", error });
   }
 });
+
 
 module.exports = router
 

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 const Login = ({setAuth}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userid, setuserid] = useState()
   const navigate = useNavigate()
 
 
@@ -15,8 +16,10 @@ const Login = ({setAuth}) => {
 		const res = await axios.post("http://localhost:3000/user/login",{
 			username,password
 		},{withCredentials:true})
+    const id = (res.data.user.id)
+    
+    
 		setAuth(true)
-    console.log(res)
 		navigate("/")
     toast.success(` Welcome ${username.slice(0,5)}`)
 	} catch (error) {

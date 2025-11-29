@@ -12,7 +12,7 @@ const Home = ({ setAuth }) => {
   
     return (
         <>
-         <Sidebar></Sidebar>
+         <Sidebar setAuth={setAuth}></Sidebar>
             <div>
                 <FaceExpressionDetector setsonglist={setsonglist} setAuth={setAuth}></FaceExpressionDetector>
                 <Songs songlist={songlist}></Songs>

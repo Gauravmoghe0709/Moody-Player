@@ -16,6 +16,7 @@ const userplaylistschema = new mongoose.Schema({
          artist:String,
          title:String,
       },
+      
      ]   
 })
 
