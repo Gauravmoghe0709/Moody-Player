@@ -1,22 +1,18 @@
-import React, { useState, useRef, } from 'react';
+import React, { useState, useEffect, } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
-import { useNavigate } from 'react-router-dom';
-
 
 
 const Search = () => {
 
-  
   const [query, setQuery] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [playlistid, setplaylistid] = useState()
+  const [playlistid, setplaylistid] = useState("692d8b965d029113d680545a")
   const [showAddSongForm, setShowAddSongForm] = useState(false);
   const [formTitle, setFormTitle] = useState("");
   const [formArtist, setFormArtist] = useState("");
   const [formFile, setFormFile] = useState(null);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,8 +28,10 @@ const Search = () => {
       try {
         const res = await axios.post(`http://localhost:3000/user/create-playlist`, { playlistname }, { withCredentials: true });
         console.log(res.data);
-        const id  = res.data.newplaylist._id
+        const id = res.data.newplaylist._id
+        console.log("this is a playlistid", id)
         setplaylistid(id)
+
 
       }
       catch (error) {
@@ -46,10 +44,38 @@ const Search = () => {
   };
 
 
-  const handlesongdata =(e)=>{
-      e.preventDefault()
-      console.log({ title: formTitle, artist: formArtist, file: formFile })
+  const handlesongdata = async (e) => {
+    e.preventDefault()
+    const formdata = new FormData();// When you want to upload files (mp3, image, video) from frontend → backend then we use formdata
+    formdata.append("title", formTitle);
+    formdata.append("artist", formArtist);
+    formdata.append("song", formFile);
+    try {
+      const res = await axios.post(`http://localhost:3000/user/uploadsongs/${playlistid}`,
+        formdata,
+        { withCredentials: true, });
+      console.log(res)
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  useEffect(() => {
+
+    async function getplaylist() {
+      try {
+        const res = await axios.get(`http://localhost:3000/user/getplaylists/${playlistid}`, { withCredentials: true });
+        console.log(res.data.song);
+        setPlaylists(res.data.song);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getplaylist();
+
+  }, [playlistid])
+
+
 
 
   return (
@@ -99,7 +125,7 @@ const Search = () => {
             )}
           </div>
         </div>
- 
+
         {showAddSongForm && (
           <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 mt-10">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowAddSongForm(false)} />
@@ -109,7 +135,7 @@ const Search = () => {
                 <button onClick={() => setShowAddSongForm(false)} className="text-slate-300 hover:text-white">✕</button>
               </div>
 
-              <form onSubmit={handlesongdata} className="space-y-3">  
+              <form onSubmit={handlesongdata} className="space-y-3">
 
                 <div>
                   <label className="block text-sm text-slate-200 mb-1">Song Name</label>
@@ -128,41 +154,30 @@ const Search = () => {
 
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-end">
                   <button type="button" onClick={() => setShowAddSongForm(false)} className="w-full sm:w-auto px-4 py-2 rounded-md bg-slate-700 text-slate-200">Cancel</button>
-                  <button type="submit" className="w-full sm:w-auto px-4 py-2 rounded-md bg-indigo-600 text-white">Add Song</button>
+                  <button type="submit" className="w-full sm:w-auto px-4 py-2 rounded-md bg-indigo-600 text-white">Add to playlist </button>
                 </div>
               </form>
             </div>
           </div>
         )}
+         
+         {playlists.length > 0 ?(
+          <section id="results" className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4 text-center">Search Results</h2> 
+            <div className="grid grid-cols-2 gap-5 sm:grid-cols-1 md:grid-cols-2 ml-auto">
+              {playlists.map((song, index) => (
+                <div key={index} className="p-6 hover:bg-slate-700 border-1 border-gray-500 h-60 md:w-90 rounded-xl flex flex-col justify-center items-center">  
+                <img src="./image/71Dfb1pufBL.png" className='h-30 w-30' />
+                  <h3 className="text-lg font-semibold mb-2">{song.title}</h3>
+                  <p className="text-slate-400 mb-2">Artist: {song.artist}</p>
+                </div>
+              ))}
+            </div> 
 
-        <section className="max-w-7xl mx-auto mt-8">
-          {playlists.length === 0 ? (
-            <h1 className='text-center pt-5 tracking-widest text-gray-500'>You have no playlist here ...</h1>
-          ) : (
-            <>
-              <h3 className="text-xl font-semibold mb-4 text-white">Your Playlists</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {playlists.map((pl) => (
-                  <div key={pl._id || pl.playlistname} className="bg-slate-800 rounded-lg overflow-hidden shadow-md">
-                    <div className="relative h-36">
-                      <img src={`https://picsum.photos/seed/playlist-${pl._id || pl.playlistname}/600/400`} alt={pl.playlistname} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    </div>
-                    <div className="p-3">
-                      <h4 className="text-white font-semibold truncate">{pl.playlistname}</h4>
-                      <p className="text-sm text-slate-300">{(pl.songs && pl.songs.length) || 0} songs</p>
-                      <div className="mt-3 flex items-center justify-between">
-                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded">Open</button>
-                        <button className="text-rose-400 hover:text-rose-500">❤</button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </section>
-
+          </section>
+         ): (
+          <p className="text-center text-slate-400 mt-10">No songs found in this playlist. Please add songs.</p>
+         )}
       </main>
     </div>
   );

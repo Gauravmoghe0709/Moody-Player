@@ -63,7 +63,7 @@ router.post("/uploadsongs/:playlistid",authmiddleware, upload.single("song"), as
 
 })
 // get a all song playlist (when we open a songs page then see all songs )
-router.get("/:playlistid/songs", async (req, res) => {
+router.get("/getplaylists/:playlistid", async (req, res) => {
     const { playlistid } = req.params
 
     const playlist = await playlistmodel.findOne({

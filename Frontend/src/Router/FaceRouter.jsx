@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import Register from "../pages/Register"
 import { Navigate } from "react-router-dom";
 import  Search  from "../pages/Search";
+import Player from "../pages/Player";
 
 
 const FaceRouter = () => {
@@ -28,6 +29,7 @@ const FaceRouter = () => {
                 ></Route>
                 <Route path="/Register" element={<Register></Register>}></Route>
                 <Route path="/Search" element={<Search setAuth={setAuth}></Search>}></Route>
+                <Route path="/music-player" element={<Player></Player>}></Route>
 
             </Routes>
         </>
